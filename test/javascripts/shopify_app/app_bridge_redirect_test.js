@@ -1,6 +1,7 @@
 suite('appBridgeRedirect', () => {
   const sandbox = sinon.createSandbox();
   const url = '/settings';
+  const originalAppBridge = window['app-bridge'];
 
   setup(() => {
     window['app-bridge'] = {
@@ -20,11 +21,12 @@ suite('appBridgeRedirect', () => {
     };
     document.body.dataset.apiKey = '123';
     document.body.dataset.shopOrigin = 'myshop.com';
+    document.body.dataset.host = 'https://mock-host/admin';
   });
 
   teardown(() => {
     sandbox.restore();
-    delete window['app-bridge'];
+    window['app-bridge'] = originalAppBridge;
   });
 
 
@@ -36,8 +38,7 @@ suite('appBridgeRedirect', () => {
 
     sinon.assert.calledWith(createApp, {
       apiKey: '123',
-      shopOrigin: 'myshop.com',
-      forceRedirect: false,
+      host: 'https://mock-host/admin',
     });
   });
 
